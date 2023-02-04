@@ -9,15 +9,15 @@ public class Solver {
         this.table = new int[9][9];
         this.intitalize(this.table);
         this.NUMBERS = new ArrayList<>();
-        NUMBERS.add(1);
-        NUMBERS.add(2);
-        NUMBERS.add(3);
-        NUMBERS.add(4);
-        NUMBERS.add(5);
-        NUMBERS.add(6);
-        NUMBERS.add(7);
-        NUMBERS.add(8);
-        NUMBERS.add(9);
+        this.NUMBERS.add(1);
+        this.NUMBERS.add(2);
+        this.NUMBERS.add(3);
+        this.NUMBERS.add(4);
+        this.NUMBERS.add(5);
+        this.NUMBERS.add(6);
+        this.NUMBERS.add(7);
+        this.NUMBERS.add(8);
+        this.NUMBERS.add(9);
     }
 
     private void intitalize(int[][] table) {
@@ -69,7 +69,7 @@ public class Solver {
                         }
                     }
                 }
-                if(posNum.size() == 1) {
+                if (posNum.size() == 1) {
                     table[i][j] = posNum.get(0);
                 }
             }
@@ -186,7 +186,7 @@ public class Solver {
                 break;
             case 3:
                 for (int i = 0; i < 3; i++) {
-                    for (int j = 6; j < table[i].length; j++) {
+                    for (int j = 6; j < 9; j++) {
                         if (table[i][j] == number) {
                             return false;
                         }
@@ -213,7 +213,7 @@ public class Solver {
                 break;
             case 6:
                 for (int i = 3; i < 6; i++) {
-                    for (int j = 6; j < table[i].length; j++) {
+                    for (int j = 6; j < 9; j++) {
                         if (table[i][j] == number) {
                             return false;
                         }
@@ -221,7 +221,7 @@ public class Solver {
                 }
                 break;
             case 7:
-                for (int i = 6; i < table.length; i++) {
+                for (int i = 6; i < 9; i++) {
                     for (int j = 0; j < 3; j++) {
                         if (table[i][j] == number) {
                             return false;
@@ -230,7 +230,7 @@ public class Solver {
                 }
                 break;
             case 8:
-                for (int i = 6; i < table.length; i++) {
+                for (int i = 6; i < 9; i++) {
                     for (int j = 3; j < 6; j++) {
                         if (table[i][j] == number) {
                             return false;
@@ -239,8 +239,8 @@ public class Solver {
                 }
                 break;
             case 9:
-                for (int i = 6; i < table.length; i++) {
-                    for (int j = 6; j < table[i].length; j++) {
+                for (int i = 6; i < 9; i++) {
+                    for (int j = 6; j < 9; j++) {
                         if (table[i][j] == number) {
                             return false;
                         }
@@ -257,11 +257,11 @@ public class Solver {
         long start = System.currentTimeMillis();
         app.solve(table);
         long end = System.currentTimeMillis();
-        long timetaken = end-start;
-        if(timetaken < 1000) {
-            System.out.println("Time taken = "+timetaken+"ms");
-        } else if(timetaken >= 1000) {
-            System.out.println("Time taken = "+((end-start)/1000)+"s");
+        long timetaken = end - start;
+        if (timetaken < 1000) {
+            System.out.println("Time taken = " + timetaken + "ms");
+        } else if (timetaken >= 1000) {
+            System.out.println("Time taken = " + ((end - start) / 1000) + "s");
         }
     }
 }

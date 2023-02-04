@@ -9,19 +9,19 @@ public class Generator {
 
     Generator() {
         this.table = new int[9][9];
-        NUMBERS = new ArrayList<>();
-        NUMBERS.add(1);
-        NUMBERS.add(2);
-        NUMBERS.add(3);
-        NUMBERS.add(4);
-        NUMBERS.add(5);
-        NUMBERS.add(6);
-        NUMBERS.add(7);
-        NUMBERS.add(8);
-        NUMBERS.add(9);
+        this.NUMBERS = new ArrayList<>();
+        this.NUMBERS.add(1);
+        this.NUMBERS.add(2);
+        this.NUMBERS.add(3);
+        this.NUMBERS.add(4);
+        this.NUMBERS.add(5);
+        this.NUMBERS.add(6);
+        this.NUMBERS.add(7);
+        this.NUMBERS.add(8);
+        this.NUMBERS.add(9);
         this.fillDiagonal(table);
         this.fillRest(table, 0, 3);
-        this.removeDigits();
+        this.removeDigits(table);
     }
 
     private void print(int[][] table) {
@@ -52,7 +52,7 @@ public class Generator {
         for (int i = 0; i < table.length; i++) {
             int j = i;
             posNum.clear();
-            box = genrateBoxNumber(i, j);
+            box = generateBoxNumber(i, j);
             for (int num : NUMBERS) {
                 if (checkBox(table, num, box)) {
                     if (checkHorizontal(table, i, num)) {
@@ -165,7 +165,7 @@ public class Generator {
             }
         }
         for (int num : NUMBERS) {
-            int box = genrateBoxNumber(i, j);
+            int box = generateBoxNumber(i, j);
             if (checkBox(table, num, box)) {
                 if (checkHorizontal(table, i, num)) {
                     if (checkVertical(table, j, num)) {
@@ -199,7 +199,7 @@ public class Generator {
         return true;
     }
 
-    private int genrateBoxNumber(int i, int j) {
+    private int generateBoxNumber(int i, int j) {
         if (i >= 0 && i <= 2) {
             if (j >= 0 && j <= 2) {
                 return 1;
@@ -318,7 +318,7 @@ public class Generator {
         return table;
     }
 
-    private void removeDigits() {
+    private void removeDigits(int[][] table) {
         Scanner in = new Scanner(System.in);
         System.out.println("Enter how many digits should be missing(max is 64):");
         int count = in.nextInt();
