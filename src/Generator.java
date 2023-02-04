@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.Scanner;
 
 public class Generator {
     private int[][] table;
@@ -318,7 +319,9 @@ public class Generator {
     }
 
     private void removeDigits() {
-        int count = 20;
+        Scanner in = new Scanner(System.in);
+        System.out.println("Enter how many digits should be missing(max is 64):");
+        int count = in.nextInt();
         int temp = count;
         Random rand = new Random();
         while (count != 0) {
@@ -331,5 +334,6 @@ public class Generator {
         }
         print(table);
         System.out.println("Empty = " + temp);
+        in.close();
     }
 }

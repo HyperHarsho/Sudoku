@@ -254,6 +254,9 @@ public class Solver {
     public static void main(String[] args) throws Exception {
         Solver app = new Solver();
         int[][] table = app.table.clone();
+        long start = System.currentTimeMillis();
         app.solve(table);
+        long end = System.currentTimeMillis();
+        System.out.println("Time taken = "+((end-start))+"ms");
     }
 }
