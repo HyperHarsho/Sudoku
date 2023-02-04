@@ -257,6 +257,11 @@ public class Solver {
         long start = System.currentTimeMillis();
         app.solve(table);
         long end = System.currentTimeMillis();
-        System.out.println("Time taken = "+((end-start))+"ms");
+        long timetaken = end-start;
+        if(timetaken < 1000) {
+            System.out.println("Time taken = "+timetaken+"ms");
+        } else if(timetaken >= 1000) {
+            System.out.println("Time taken = "+((end-start)/1000)+"s");
+        }
     }
 }
