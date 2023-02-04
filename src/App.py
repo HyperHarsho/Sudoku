@@ -1,8 +1,11 @@
 import numpy as np
 import random
+import pygame
+import time
 
 NUMBERS = np.array([1, 2, 3, 4, 5, 6, 7, 8, 9], int)
 table = np.zeros((9, 9), int)
+empty = []
 
 
 def printTable():
@@ -29,25 +32,6 @@ def initialize():
 
 def solve():
     box = 0
-    for i in range(len(table)):
-        for j in range(len(table[i])):
-            if table[i][j] != 0:
-                continue
-            box = generateBoxNumber(i, j)
-            posNum = []
-            for num in NUMBERS:
-                if checkBox(num, box):
-                    if checkHorizontal(i, num):
-                        if checkVertical(j, num):
-                            posNum.append(num)
-            if len(posNum) == 1:
-                table[i][j] = posNum.pop()
-    solve2()
-    printTable()
-
-
-def solve2():
-    box = 0
     if check():
         return True
     for i in range(len(table)):
@@ -60,9 +44,11 @@ def solve2():
                     if checkHorizontal(i, num):
                         if checkVertical(j, num):
                             table[i][j] = num
-                            if solve2():
+                            visualizeGrid()
+                            if solve():
                                 return True
                             table[i][j] = 0
+                            visualizeGrid()
     return False
 
 
@@ -251,9 +237,50 @@ def removeDigit():
         if table[i][j] != 0:
             count = count-1
             table[i][j] = 0
+            empty.append([i, j])
     printTable()
     print("Empty = "+str(temp))
 
 
 initialize()
-solve()
+
+pygame.font.init()
+font = pygame.font.SysFont('Comic Sans MS', 40)
+gridDisplay = pygame.display.set_mode((540, 540))
+grid_node_width = 60
+grid_node_height = 60
+
+
+def createNumber(x, y, num):
+    if num == 0:
+        return
+    text = font.render(str(num), False, (0, 0, 0))
+    gridDisplay.blit(text, (x, y))
+
+
+def visualizeGrid():
+    pygame.event.get()
+    pygame.display.get_surface().fill((255, 255, 255))
+    y = 0
+    for i in range(len(table)):
+        x = 0
+        for j in range(len(table)):
+            if [i, j] in empty:
+                text = font.render("_", False, (0, 0, 0))
+                gridDisplay.blit(text, (x, y))
+            createNumber(x, y, table[i][j])
+            x += grid_node_width
+        y += grid_node_height
+    pygame.display.update()
+
+
+solving = True
+while solving:
+    if check():
+        solving = False
+    visualizeGrid()
+    solve()
+    visualizeGrid()
+
+printTable()
+pygame.quit()
