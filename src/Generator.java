@@ -20,7 +20,6 @@ public class Generator {
         NUMBERS.add(9);
         this.fillDiagonal(table);
         this.fillRest(table, 0, 3);
-        this.print(table);
         this.removeDigits();
     }
 
@@ -319,7 +318,7 @@ public class Generator {
     }
 
     private void removeDigits() {
-        int count = 45;
+        int count = 20;
         int temp = count;
         Random rand = new Random();
         while (count != 0) {

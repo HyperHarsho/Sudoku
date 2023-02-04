@@ -81,7 +81,6 @@ public class Solver {
     private boolean solve2(int[][] table) {
         int box;
         if (check(table)) {
-            print(table);
             return true;
         }
         for (int i = 0; i < table.length; i++) {
