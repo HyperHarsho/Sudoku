@@ -50,35 +50,7 @@ public class Solver {
         }
     }
 
-    private void solve(int[][] table) {
-        int box;
-        List<Integer> posNum = new ArrayList<>();
-        for (int i = 0; i < table.length; i++) {
-            for (int j = 0; j < table[i].length; j++) {
-                if (table[i][j] != 0) {
-                    continue;
-                }
-                box = genrateBoxNumber(i, j);
-                posNum.clear();
-                for (int num : NUMBERS) {
-                    if (checkBox(table, num, box)) {
-                        if (checkHorizontal(table, i, num)) {
-                            if (checkVertical(table, j, num)) {
-                                posNum.add(num);
-                            }
-                        }
-                    }
-                }
-                if (posNum.size() == 1) {
-                    table[i][j] = posNum.get(0);
-                }
-            }
-        }
-        solve2(table);
-        print(table);
-    }
-
-    private boolean solve2(int[][] table) {
+    private boolean solve(int[][] table) {
         int box;
         if (check(table)) {
             return true;
@@ -90,18 +62,15 @@ public class Solver {
                 }
                 box = genrateBoxNumber(i, j);
                 for (int num : NUMBERS) {
-                    if (checkBox(table, num, box)) {
-                        if (checkHorizontal(table, i, num)) {
-                            if (checkVertical(table, j, num)) {
-                                table[i][j] = num;
-                                if (solve2(table)) {
-                                    return true;
-                                }
-                                table[i][j] = 0;
-                            }
+                    if (checkUsed(table, i, j, box, num)) {
+                        table[i][j] = num;
+                        if (solve(table)) {
+                            return true;
                         }
+                        table[i][j] = 0;
                     }
                 }
+                return false;
             }
         }
         return false;
@@ -162,6 +131,17 @@ public class Solver {
             return 8;
         }
         return 9;
+    }
+
+    private boolean checkUsed(int[][] table, int i, int j, int box, int num) {
+        if (checkBox(table, num, box)) {
+            if (checkHorizontal(table, i, num)) {
+                if (checkVertical(table, j, num)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     private boolean checkBox(int[][] table, int number, int box) {
@@ -257,11 +237,8 @@ public class Solver {
         long start = System.currentTimeMillis();
         app.solve(table);
         long end = System.currentTimeMillis();
+        app.print(table);
         long timetaken = end - start;
-        if (timetaken < 1000) {
-            System.out.println("Time taken = " + timetaken + "ms");
-        } else if (timetaken >= 1000) {
-            System.out.println("Time taken = " + ((end - start) / 1000) + "s");
-        }
+        System.out.println("Time taken = " + timetaken + "ms");
     }
 }

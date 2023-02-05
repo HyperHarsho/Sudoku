@@ -19,8 +19,11 @@ public class Generator {
         this.NUMBERS.add(7);
         this.NUMBERS.add(8);
         this.NUMBERS.add(9);
-        this.fillDiagonal(table);
-        this.fillRest(table, 0, 3);
+        while (!check(table)) {
+            this.table = new int[9][9];
+            this.fillDiagonal(table);
+            this.fillRest(table, 0, 3);
+        }
         this.removeDigits(table);
     }
 
@@ -45,28 +48,36 @@ public class Generator {
         }
     }
 
+    private boolean check(int[][] table) {
+        for (int i = 0; i < table.length; i++) {
+            for (int j = 0; j < table[i].length; j++) {
+                if (table[i][j] == 0) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    private boolean checkUsed(int[][] table, int i, int j, int box, int num) {
+        if (checkBox(table, num, box)) {
+            if (checkHorizontal(table, i, num)) {
+                if (checkVertical(table, j, num)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     private void fillDiagonal(int[][] table) {
-        int box;
         List<Integer> posNum = new ArrayList<>();
         Random rand = new Random();
         for (int i = 0; i < table.length; i++) {
             int j = i;
-            posNum.clear();
-            box = generateBoxNumber(i, j);
-            for (int num : NUMBERS) {
-                if (checkBox(table, num, box)) {
-                    if (checkHorizontal(table, i, num)) {
-                        if (checkVertical(table, j, num)) {
-                            posNum.add(num);
-                        }
-                    }
-                }
-            }
-            if (posNum.size() < 1) {
-                return;
-            }
-            table[i][j] = posNum.get(rand.nextInt(posNum.size()));
+            table[i][j] = NUMBERS.get(rand.nextInt(NUMBERS.size()));
         }
+
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 if (table[i][j] != 0) {
@@ -74,21 +85,11 @@ public class Generator {
                 }
                 posNum.clear();
                 for (int num : NUMBERS) {
-                    if (checkBox(table, num, 1)) {
-                        if (checkHorizontal(table, i, num)) {
-                            if (checkVertical(table, j, num)) {
-                                posNum.add(num);
-                            }
-                        }
+                    if (checkUsed(table, i, j, 1, num)) {
+                        posNum.add(num);
                     }
                 }
-                if (posNum.size() >= 1) {
-                    table[i][j] = posNum.get(rand.nextInt(posNum.size()));
-                } else {
-                    System.out.println("Error");
-                    print(table);
-                    return;
-                }
+                table[i][j] = posNum.get(rand.nextInt(posNum.size()));
             }
         }
         for (int i = 3; i < 6; i++) {
@@ -98,21 +99,11 @@ public class Generator {
                 }
                 posNum.clear();
                 for (int num : NUMBERS) {
-                    if (checkBox(table, num, 5)) {
-                        if (checkHorizontal(table, i, num)) {
-                            if (checkVertical(table, j, num)) {
-                                posNum.add(num);
-                            }
-                        }
+                    if (checkUsed(table, i, j, 5, num)) {
+                        posNum.add(num);
                     }
                 }
-                if (posNum.size() >= 1) {
-                    table[i][j] = posNum.get(rand.nextInt(posNum.size()));
-                } else {
-                    System.out.println("Error");
-                    print(table);
-                    return;
-                }
+                table[i][j] = posNum.get(rand.nextInt(posNum.size()));
             }
         }
         for (int i = 6; i < 9; i++) {
@@ -122,60 +113,35 @@ public class Generator {
                 }
                 posNum.clear();
                 for (int num : NUMBERS) {
-                    if (checkBox(table, num, 9)) {
-                        if (checkHorizontal(table, i, num)) {
-                            if (checkVertical(table, j, num)) {
-                                posNum.add(num);
-                            }
-                        }
+                    if (checkUsed(table, i, j, 9, num)) {
+                        posNum.add(num);
                     }
                 }
-                if (posNum.size() >= 1) {
-                    table[i][j] = posNum.get(rand.nextInt(posNum.size()));
-                } else {
-                    System.out.println("Error");
-                    print(table);
-                    return;
-                }
+                table[i][j] = posNum.get(rand.nextInt(posNum.size()));
             }
         }
+
     }
 
     private boolean fillRest(int[][] table, int i, int j) {
-        if (j >= 9 && i < 8) {
-            i = i + 1;
-            j = 0;
-        }
-        if (i >= 9 && j >= 9) {
+        if (i == 8 && j == 9) {
             return true;
         }
-        if (i < 3) {
-            if (j < 3) {
-                j = 3;
-            }
-        } else if (i < 6) {
-            if (j == (int) (i / 3) * 3) {
-                j = j + 3;
-            }
-        } else if (j == 6) {
+        if (j == 9) {
             i = i + 1;
             j = 0;
-            if (i >= 9) {
-                return true;
-            }
+        }
+        if (table[i][j] != 0) {
+            return fillRest(table, i, j + 1);
         }
         for (int num : NUMBERS) {
             int box = generateBoxNumber(i, j);
-            if (checkBox(table, num, box)) {
-                if (checkHorizontal(table, i, num)) {
-                    if (checkVertical(table, j, num)) {
-                        table[i][j] = num;
-                        if (fillRest(table, i, j + 1)) {
-                            return true;
-                        }
-                        table[i][j] = 0;
-                    }
+            if (checkUsed(table, i, j, box, num)) {
+                table[i][j] = num;
+                if (fillRest(table, i, j + 1)) {
+                    return true;
                 }
+                table[i][j] = 0;
             }
         }
         return false;
@@ -320,20 +286,24 @@ public class Generator {
 
     private void removeDigits(int[][] table) {
         Scanner in = new Scanner(System.in);
-        System.out.println("Enter how many digits should be missing(max is 64):");
+        System.out.println("Enter how many digits should be missing(max is 81):");
         int count = in.nextInt();
-        int temp = count;
+        while(count>81){
+            System.out.println("Enter a number between 1 and 81");
+            count = in.nextInt();
+        }
         Random rand = new Random();
-        while (count != 0) {
+        for(int k = 0;k < count;k++) {
             int i = rand.nextInt(9);
             int j = rand.nextInt(9);
             if (table[i][j] != 0) {
-                count--;
                 table[i][j] = 0;
+            } else {
+                k--;
             }
         }
         print(table);
-        System.out.println("Empty = " + temp);
+        System.out.println("Empty = " + count);
         in.close();
     }
 }
