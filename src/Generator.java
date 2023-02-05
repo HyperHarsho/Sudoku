@@ -288,9 +288,11 @@ public class Generator {
         Scanner in = new Scanner(System.in);
         System.out.println("Enter how many digits should be missing(max is 81):");
         int count = in.nextInt();
-        while (count > 81 && count < 1) {
-            System.out.println("Enter a number between 1 and 81");
-            count = in.nextInt();
+        if (count > 81) {
+            count = 81;
+        }
+        if (count < 0) {
+            count = 0;
         }
         Random rand = new Random();
         for (int k = 0; k < count; k++) {
