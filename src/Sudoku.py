@@ -1,10 +1,10 @@
+#FAILED PRODUCT
 import numpy as np
 import random
 import pygame
-import time
 
 NUMBERS = np.array([1, 2, 3, 4, 5, 6, 7, 8, 9], int)
-table = np.zeros((9, 9), int)
+table = np.zeros((9,9),int)
 empty = []
 
 
@@ -25,8 +25,10 @@ def printTable():
 
 
 def initialize():
-    fillDiagonal()
-    fillRest(0, 3)
+    while not check():
+        table.fill(0)
+        fillDiagonal()
+        fillRest(0, 3)
     removeDigit()
 
 
@@ -40,15 +42,22 @@ def solve():
                 continue
             box = generateBoxNumber(i, j)
             for num in NUMBERS:
-                if checkBox(num, box):
-                    if checkHorizontal(i, num):
-                        if checkVertical(j, num):
-                            table[i][j] = num
-                            visualizeGrid()
-                            if solve():
-                                return True
-                            table[i][j] = 0
-                            visualizeGrid()
+                if checkUsed(i, j, box, num):
+                    table[i][j] = num
+                    visualizeGrid()
+                    if solve():
+                        return True
+                    table[i][j] = 0
+                    visualizeGrid()
+            return False
+    return False
+
+
+def checkUsed(i, j, box, number):
+    if checkBox(number, box):
+        if checkHorizontal(i, number):
+            if checkVertical(j, number):
+                return True
     return False
 
 
@@ -147,64 +156,35 @@ def checkBox(number, box):
 def fillDiagonal():
     for i in range(len(table)):
         j = i
-        posNum = []
-        box = generateBoxNumber(i, j)
-        for num in NUMBERS:
-            if checkBox(num, box):
-                if checkHorizontal(i, num):
-                    if checkVertical(j, num):
-                        posNum.append(num)
-        if len(posNum) < 1:
-            return
-        table[i][j] = random.choice(posNum)
+        table[i][j] = random.choice(NUMBERS)
     for i in range(3):
         for j in range(3):
             if table[i][j] != 0:
                 continue
             posNum = []
             for num in NUMBERS:
-                if checkBox(num, 1):
-                    if checkHorizontal(i, num):
-                        if checkVertical(j, num):
-                            posNum.append(num)
-            if len(posNum) >= 1:
-                table[i][j] = random.choice(posNum)
-            else:
-                print("Error")
-                printTable()
-                return
+                if checkUsed(i, j, 1, num):
+                    posNum.append(num)
+            table[i][j] = random.choice(posNum)
+            
     for i in range(3, 6):
         for j in range(3, 6):
             if table[i][j] != 0:
                 continue
             posNum = []
             for num in NUMBERS:
-                if checkBox(num, 5):
-                    if checkHorizontal(i, num):
-                        if checkVertical(j, num):
-                            posNum.append(num)
-            if len(posNum) >= 1:
-                table[i][j] = random.choice(posNum)
-            else:
-                print("Error")
-                printTable()
-                return
+                if checkUsed(i, j, 5, num):
+                    posNum.append(num)
+            table[i][j] = random.choice(posNum)
     for i in range(6, 9):
         for j in range(6, 9):
             if table[i][j] != 0:
                 continue
             posNum = []
             for num in NUMBERS:
-                if checkBox(num, 9):
-                    if checkHorizontal(i, num):
-                        if checkVertical(j, num):
-                            posNum.append(num)
-            if len(posNum) >= 1:
-                table[i][j] = random.choice(posNum)
-            else:
-                print("Error")
-                printTable()
-                return
+                if checkUsed(i, j, 9, num):
+                    posNum.append(num)
+            table[i][j] = random.choice(posNum)
 
 
 def fillRest(i, j):
@@ -217,29 +197,28 @@ def fillRest(i, j):
         return fillRest(i, j + 1)
     for num in NUMBERS:
         box = generateBoxNumber(i, j)
-        if checkBox(num, box):
-            if checkHorizontal(i, num):
-                if checkVertical(j, num):
-                    table[i][j] = num
-                    if fillRest(i, j + 1):
-                        return True
-                    table[i][j] = 0
+        if checkUsed(i, j, box, num):
+            table[i][j] = num
+            if fillRest(i, j + 1):
+                return True
+            table[i][j] = 0
     return False
 
 
 def removeDigit():
     count = int(
-        input("Enter how many digits should be missing(max is 64):"))
-    temp = count
-    while count != 0:
-        i = random.randint(0, 8)
-        j = random.randint(0, 8)
+        input("Enter how many digits should be missing(max is 81):"))
+    while count > 81 and count < 1:
+        count = int(input("Enter a number between 1 and 81"))
+    k = count
+    while k >= 0:
+        i = random.randint(1,9)-1
+        j = random.randint(1,9)-1
         if table[i][j] != 0:
-            count = count-1
             table[i][j] = 0
-            empty.append([i, j])
+            k-=1
     printTable()
-    print("Empty = "+str(temp))
+    print("Empty = "+str(count))
 
 
 initialize()
