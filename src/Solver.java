@@ -1,5 +1,7 @@
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 public class Solver {
     private int[][] table;
@@ -18,6 +20,7 @@ public class Solver {
         this.NUMBERS.add(7);
         this.NUMBERS.add(8);
         this.NUMBERS.add(9);
+        Collections.shuffle(this.NUMBERS,new Random(new Random().nextLong()));
     }
 
     private void intitalize(int[][] table) {
@@ -60,7 +63,7 @@ public class Solver {
                 if (table[i][j] != 0) {
                     continue;
                 }
-                box = genrateBoxNumber(i, j);
+                box = generateBoxNumber(i, j);
                 for (int num : NUMBERS) {
                     if (checkUsed(table, i, j, box, num)) {
                         table[i][j] = num;
@@ -105,7 +108,7 @@ public class Solver {
         return true;
     }
 
-    private int genrateBoxNumber(int i, int j) {
+    private int generateBoxNumber(int i, int j) {
         if (i >= 0 && i <= 2) {
             if (j >= 0 && j <= 2) {
                 return 1;
