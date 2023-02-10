@@ -1,7 +1,6 @@
 """
-run "pip install numpy"
-run "pip install pygame --pre"
-in terminal
+run "pip install numpy" and "pip install pygame --pre"
+in terminal before executing the program
 """
 import numpy as np
 import random
