@@ -20,7 +20,7 @@ public class Solver {
         this.NUMBERS.add(7);
         this.NUMBERS.add(8);
         this.NUMBERS.add(9);
-        Collections.shuffle(this.NUMBERS,new Random(new Random().nextLong()));
+        Collections.shuffle(this.NUMBERS, new Random(new Random().nextLong()));
     }
 
     private void intitalize(int[][] table) {
