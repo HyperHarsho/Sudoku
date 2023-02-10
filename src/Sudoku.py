@@ -1,10 +1,9 @@
-#FAILED PRODUCT
 import numpy as np
 import random
 import pygame
+import time
 
-NUMBERS = np.array([1, 2, 3, 4, 5, 6, 7, 8, 9], int)
-table = np.zeros((9,9),int)
+table = np.zeros((9, 9), int)
 empty = []
 
 
@@ -25,14 +24,12 @@ def printTable():
 
 
 def initialize():
-    while not check():
-        table.fill(0)
-        fillDiagonal()
-        fillRest(0, 3)
+    fill()
     removeDigit()
 
 
 def solve():
+    time.sleep(0.25)
     box = 0
     if check():
         return True
@@ -41,9 +38,9 @@ def solve():
             if table[i][j] != 0:
                 continue
             box = generateBoxNumber(i, j)
-            for num in NUMBERS:
-                if checkUsed(i, j, box, num):
-                    table[i][j] = num
+            for num in range(9):
+                if checkUsed(i, j, box, num+1):
+                    table[i][j] = num+1
                     visualizeGrid()
                     if solve():
                         return True
@@ -153,56 +150,34 @@ def checkBox(number, box):
     return True
 
 
-def fillDiagonal():
-    for i in range(len(table)):
-        j = i
-        table[i][j] = random.choice(NUMBERS)
-    for i in range(3):
-        for j in range(3):
-            if table[i][j] != 0:
-                continue
-            posNum = []
-            for num in NUMBERS:
-                if checkUsed(i, j, 1, num):
-                    posNum.append(num)
-            table[i][j] = random.choice(posNum)
-            
-    for i in range(3, 6):
-        for j in range(3, 6):
-            if table[i][j] != 0:
-                continue
-            posNum = []
-            for num in NUMBERS:
-                if checkUsed(i, j, 5, num):
-                    posNum.append(num)
-            table[i][j] = random.choice(posNum)
-    for i in range(6, 9):
-        for j in range(6, 9):
-            if table[i][j] != 0:
-                continue
-            posNum = []
-            for num in NUMBERS:
-                if checkUsed(i, j, 9, num):
-                    posNum.append(num)
-            table[i][j] = random.choice(posNum)
-
-
-def fillRest(i, j):
-    if i == 8 and j == 9:
+def gensolve():
+    box = 0
+    if check():
         return True
-    if j == 9:
-        i += 1
-        j = 0
-    if table[i][j] != 0:
-        return fillRest(i, j + 1)
-    for num in NUMBERS:
-        box = generateBoxNumber(i, j)
-        if checkUsed(i, j, box, num):
-            table[i][j] = num
-            if fillRest(i, j + 1):
-                return True
-            table[i][j] = 0
+    for i in range(len(table)):
+        for j in range(len(table[i])):
+            if table[i][j] != 0:
+                continue
+            box = generateBoxNumber(i, j)
+            for num in range(9):
+                if checkUsed(i, j, box, num+1):
+                    table[i][j] = num+1
+                    if gensolve():
+                        return True
+                    table[i][j] = 0
+            return False
     return False
+
+
+def fill():
+    while check() == False:
+        for i in range(len(table)):
+            for j in range(len(table[i])):
+                if table[i][j] != 0:
+                    continue
+                table[i][j] = random.randint(1, 9)
+                if not gensolve():
+                    table[i][j] = 0
 
 
 def removeDigit():
@@ -212,11 +187,12 @@ def removeDigit():
         count = int(input("Enter a number between 1 and 81"))
     k = count
     while k >= 0:
-        i = random.randint(1,9)-1
-        j = random.randint(1,9)-1
+        i = random.randint(0, 8)
+        j = random.randint(0, 8)
         if table[i][j] != 0:
             table[i][j] = 0
-            k-=1
+            empty.append((i, j))
+            k -= 1
     printTable()
     print("Empty = "+str(count))
 
@@ -230,24 +206,37 @@ grid_node_width = 60
 grid_node_height = 60
 
 
-def createNumber(x, y, num):
+def createNumber(x, y, num,color):
     if num == 0:
         return
-    text = font.render(str(num), False, (0, 0, 0))
+    text = font.render(str(num), False, color)
     gridDisplay.blit(text, (x, y))
 
 
 def visualizeGrid():
     pygame.event.get()
     pygame.display.get_surface().fill((255, 255, 255))
+    for i in range(60, 540, 60):
+        x = i - 5
+        y = i
+        pygame.draw.line(gridDisplay, (211, 211, 211), (x, 0), (x, 540), 2)
+        pygame.draw.line(gridDisplay, (211, 211, 211), (0, y), (540, y), 2)
+    for i in range(180, 540, 180):
+        x = i - 5
+        y = i
+        pygame.draw.line(gridDisplay, (0, 0, 0), (x, 0), (x, 540), 5)
+        pygame.draw.line(gridDisplay, (0, 0, 0), (0, y), (540, y), 5)
     y = 0
     for i in range(len(table)):
-        x = 0
+        x = 15
         for j in range(len(table)):
-            if [i, j] in empty:
+            if (i, j) in empty:
                 text = font.render("_", False, (0, 0, 0))
                 gridDisplay.blit(text, (x, y))
-            createNumber(x, y, table[i][j])
+            if (i,j) in empty:
+                createNumber(x, y, table[i][j],(119,0,200))
+            else:
+                createNumber(x, y, table[i][j],(0,0,0))
             x += grid_node_width
         y += grid_node_height
     pygame.display.update()

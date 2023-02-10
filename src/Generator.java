@@ -19,11 +19,7 @@ public class Generator {
         this.NUMBERS.add(7);
         this.NUMBERS.add(8);
         this.NUMBERS.add(9);
-        while (!check(table)) {
-            this.table = new int[9][9];
-            this.fillDiagonal(table);
-            this.fillRest(table, 0, 3);
-        }
+        this.fill(table);
         this.removeDigits(table);
     }
 
@@ -70,81 +66,47 @@ public class Generator {
         return false;
     }
 
-    private void fillDiagonal(int[][] table) {
-        List<Integer> posNum = new ArrayList<>();
-        Random rand = new Random();
-        for (int i = 0; i < table.length; i++) {
-            int j = i;
-            table[i][j] = NUMBERS.get(rand.nextInt(NUMBERS.size()));
-        }
-
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                if (table[i][j] != 0) {
-                    continue;
-                }
-                posNum.clear();
-                for (int num : NUMBERS) {
-                    if (checkUsed(table, i, j, 1, num)) {
-                        posNum.add(num);
-                    }
-                }
-                table[i][j] = posNum.get(rand.nextInt(posNum.size()));
-            }
-        }
-        for (int i = 3; i < 6; i++) {
-            for (int j = 3; j < 6; j++) {
-                if (table[i][j] != 0) {
-                    continue;
-                }
-                posNum.clear();
-                for (int num : NUMBERS) {
-                    if (checkUsed(table, i, j, 5, num)) {
-                        posNum.add(num);
-                    }
-                }
-                table[i][j] = posNum.get(rand.nextInt(posNum.size()));
-            }
-        }
-        for (int i = 6; i < 9; i++) {
-            for (int j = 6; j < 9; j++) {
-                if (table[i][j] != 0) {
-                    continue;
-                }
-                posNum.clear();
-                for (int num : NUMBERS) {
-                    if (checkUsed(table, i, j, 9, num)) {
-                        posNum.add(num);
-                    }
-                }
-                table[i][j] = posNum.get(rand.nextInt(posNum.size()));
-            }
-        }
-
-    }
-
-    private boolean fillRest(int[][] table, int i, int j) {
-        if (i == 8 && j == 9) {
+    private boolean solve(int[][] table) {
+        int box;
+        if (check(table)) {
             return true;
         }
-        if (j == 9) {
-            i = i + 1;
-            j = 0;
-        }
-        if (table[i][j] != 0) {
-            return fillRest(table, i, j + 1);
-        }
-        for (int num : NUMBERS) {
-            int box = generateBoxNumber(i, j);
-            if (checkUsed(table, i, j, box, num)) {
-                table[i][j] = num;
-                if (fillRest(table, i, j + 1)) {
-                    return true;
+        for (int i = 0; i < table.length; i++) {
+            for (int j = 0; j < table[i].length; j++) {
+                if (table[i][j] != 0) {
+                    continue;
                 }
-                table[i][j] = 0;
+                box = generateBoxNumber(i, j);
+                for (int num : NUMBERS) {
+                    if (checkUsed(table, i, j, box, num)) {
+                        table[i][j] = num;
+                        if (solve(table)) {
+                            return true;
+                        }
+                        table[i][j] = 0;
+                    }
+                }
+                return false;
             }
         }
         return false;
+    }
+
+    private void fill(int[][] table) {
+        Random rand = new Random();
+        while (check(table) == false) {
+            for (int i = 0; i < table.length; i++) {
+                for (int j = 0; j < table[i].length; j++) {
+                    if (table[i][j] != 0) {
+                        continue;
+                    }
+                    table[i][j] = NUMBERS.get(rand.nextInt(NUMBERS.size()));
+                    if (!solve(table)) {
+                        table[i][j] = 0;
+                    }
+                }
+            }
+        }
     }
 
     private boolean checkHorizontal(int[][] table, int i, int number) {
