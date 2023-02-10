@@ -1,3 +1,8 @@
+"""
+run "pip install numpy"
+run "pip install pygame --pre"
+in terminal
+"""
 import numpy as np
 import random
 import pygame
@@ -206,7 +211,7 @@ grid_node_width = 60
 grid_node_height = 60
 
 
-def createNumber(x, y, num,color):
+def createNumber(x, y, num, color):
     if num == 0:
         return
     text = font.render(str(num), False, color)
@@ -233,10 +238,10 @@ def visualizeGrid():
             if (i, j) in empty:
                 text = font.render("_", False, (0, 0, 0))
                 gridDisplay.blit(text, (x, y))
-            if (i,j) in empty:
-                createNumber(x, y, table[i][j],(119,0,200))
+            if (i, j) in empty:
+                createNumber(x, y, table[i][j], (119, 0, 200))
             else:
-                createNumber(x, y, table[i][j],(0,0,0))
+                createNumber(x, y, table[i][j], (0, 0, 0))
             x += grid_node_width
         y += grid_node_height
     pygame.display.update()
