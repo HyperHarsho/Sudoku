@@ -19,12 +19,12 @@ def printTable(table):
             print("-------------------------------")
 
 
-def initialize(table,empty):
+def initialize(table, empty):
     fill(table)
-    removeDigit(table,empty)
+    removeDigit(table, empty)
 
 
-def solve(table,gridDisplay, empty, font, grid_node_width, grid_node_height):
+def solve(table, gridDisplay, empty, font, grid_node_width, grid_node_height):
     time.sleep(0.25)
     box = 0
     if check(table):
@@ -35,21 +35,23 @@ def solve(table,gridDisplay, empty, font, grid_node_width, grid_node_height):
                 continue
             box = generateBoxNumber(i, j)
             for num in range(9):
-                if checkUsed(i, j, box, num+1,table):
+                if checkUsed(i, j, box, num+1, table):
                     table[i][j] = num+1
-                    visualizeGrid(gridDisplay, table, empty, font, grid_node_width, grid_node_height)
-                    if solve(table,gridDisplay, empty, font, grid_node_width, grid_node_height):
+                    visualizeGrid(gridDisplay, table, empty, font,
+                                  grid_node_width, grid_node_height)
+                    if solve(table, gridDisplay, empty, font, grid_node_width, grid_node_height):
                         return True
                     table[i][j] = 0
-                    visualizeGrid(gridDisplay, table, empty, font, grid_node_width, grid_node_height)
+                    visualizeGrid(gridDisplay, table, empty, font,
+                                  grid_node_width, grid_node_height)
             return False
     return False
 
 
-def checkUsed(i, j, box, number,table):
-    if checkBox(number, box,table):
-        if checkHorizontal(i, number,table):
-            if checkVertical(j, number,table):
+def checkUsed(i, j, box, number, table):
+    if checkBox(number, box, table):
+        if checkHorizontal(i, number, table):
+            if checkVertical(j, number, table):
                 return True
     return False
 
@@ -156,7 +158,7 @@ def gensolve(table):
                 continue
             box = generateBoxNumber(i, j)
             for num in range(9):
-                if checkUsed(i, j, box, num+1,table):
+                if checkUsed(i, j, box, num+1, table):
                     table[i][j] = num+1
                     if gensolve(table):
                         return True
@@ -221,9 +223,10 @@ def visualizeGrid(gridDisplay, table, empty, font, grid_node_width, grid_node_he
                 text = font.render("_", False, (0, 0, 0))
                 gridDisplay.blit(text, (x, y))
             if (i, j) in empty:
-                createNumber(gridDisplay,font,x, y, table[i][j], (119, 0, 200))
+                createNumber(gridDisplay, font, x, y,
+                             table[i][j], (119, 0, 200))
             else:
-                createNumber(gridDisplay,font,x, y, table[i][j], (0, 0, 0))
+                createNumber(gridDisplay, font, x, y, table[i][j], (0, 0, 0))
             x += grid_node_width
         y += grid_node_height
     pygame.display.update()

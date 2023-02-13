@@ -4,7 +4,7 @@ from Utils import *
 
 table = np.zeros((9, 9), int)
 empty = []
-initialize(table,empty)
+initialize(table, empty)
 
 pygame.font.init()
 font = pygame.font.SysFont('Comic Sans MS', 40)
@@ -17,9 +17,11 @@ solving = True
 while solving:
     if check(table):
         solving = False
-    visualizeGrid(gridDisplay, table, empty, font, grid_node_width, grid_node_height)
-    solve(table,gridDisplay, empty, font, grid_node_width, grid_node_height)
-    visualizeGrid(gridDisplay, table, empty, font, grid_node_width, grid_node_height)
+    visualizeGrid(gridDisplay, table, empty, font,
+                  grid_node_width, grid_node_height)
+    solve(table, gridDisplay, empty, font, grid_node_width, grid_node_height)
+    visualizeGrid(gridDisplay, table, empty, font,
+                  grid_node_width, grid_node_height)
 
 printTable(table)
 pygame.quit()
