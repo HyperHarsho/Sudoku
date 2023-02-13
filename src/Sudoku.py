@@ -1,7 +1,3 @@
-"""
-run "pip install numpy" and "pip install pygame --pre"
-in terminal before executing the program
-"""
 import numpy as np
 import pygame
 from Utils import *
