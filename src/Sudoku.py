@@ -5,6 +5,20 @@ from Utils import *
 table = np.zeros((9, 9), int)
 empty = []
 initialize(table, empty)
+#table = [[0, 0, 0, 0, 0, 6, 0, 0, 3],
+#         [0, 0, 0, 0, 1, 0, 4, 0, 0],
+#         [0, 4, 0, 8, 0, 0, 0, 7, 9],
+#         [8, 0, 9, 0, 7, 0, 0, 6, 0],
+#         [0, 6, 0, 0, 8, 0, 0, 0, 5],
+#         [0, 5, 7, 0, 3, 0, 8, 0, 0],
+#         [2, 0, 0, 1, 0, 9, 0, 0, 0],
+#         [0, 0, 0, 5, 0, 3, 0, 0, 0],
+#         [0, 0, 0, 0, 0, 0, 6, 0, 0]]
+#empty = []
+#for i in range(len(table)):
+#        for j in range(len(table[i])):
+#            if table[i][j] == 0:
+#                empty.append((i,j))
 
 pygame.font.init()
 font = pygame.font.SysFont('Comic Sans MS', 40)
@@ -24,4 +38,5 @@ while solving:
                   grid_node_width, grid_node_height)
 
 printTable(table)
+time.sleep(10)
 pygame.quit()

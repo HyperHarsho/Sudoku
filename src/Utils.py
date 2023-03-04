@@ -25,7 +25,7 @@ def initialize(table, empty):
 
 
 def solve(table, gridDisplay, empty, font, grid_node_width, grid_node_height):
-    time.sleep(0.25)
+    #time.sleep(0.25)
     box = 0
     if check(table):
         return True
